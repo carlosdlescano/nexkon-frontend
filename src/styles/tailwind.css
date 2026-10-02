@@ -2,4 +2,3 @@
 @source "../**/*.{js,jsx}";
 
 @import "../../node_modules/tw-animate-css/index.css"; 
-/* Nota: Si la ruta de arriba te tira alerta al compilar, podés usar simplemente: @import "tw-animate-css"; */

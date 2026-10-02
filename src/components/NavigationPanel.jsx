@@ -6,8 +6,11 @@ import {
   FileText,
   Home,
   Menu,
+  Users, // Importamos el icono de usuarios
 } from "lucide-react";
 import { useState } from "react";
+// 1. Importar el archivo de permisos centralizados
+import { PERMISSIONS, checkPermission } from "../config/permissions";
 
 export function NavigationPanel({
   activeView,
@@ -16,47 +19,55 @@ export function NavigationPanel({
 }) {
   const [menuColapsado, setMenuColapsado] = useState(false);
 
+  // 2. Vincular los items del menú a las constantes de PERMISSIONS
   const navItems = [
     {
       id: "inicio",
       label: "Inicio",
       icon: Home,
-      allowedRoles: ["admin", "user"],
+      permission: PERMISSIONS.VIEW_ARTICULOS, // Accesible por todos los roles autenticados
     },
     {
       id: "articulos",
       label: "Artículos",
       icon: Package,
-      allowedRoles: ["admin"],
+      permission: PERMISSIONS.VIEW_ARTICULOS,
     },
     {
       id: "venta",
       label: "Venta",
       icon: ShoppingCart,
-      allowedRoles: ["admin", "user"],
+      permission: PERMISSIONS.VIEW_VENTAS,
     },
     {
       id: "stock",
       label: "Stock",
       icon: BarChart3,
-      allowedRoles: ["admin"],
+      permission: PERMISSIONS.VIEW_STOCK,
     },
     {
       id: "compras",
       label: "Compras",
       icon: ShoppingBag,
-      allowedRoles: ["admin"],
-    },
+      permission: PERMISSIONS.VIEW_COMPRAS,
+    },   
     {
       id: "reportes",
       label: "Reportes",
       icon: FileText,
-      allowedRoles: ["admin"],
+      permission: PERMISSIONS.VIEW_REPORTES,
     },
+    /**  {
+      id: "usuarios",
+      label: "Usuarios",
+      icon: Users,
+      permission: PERMISSIONS.VIEW_USUARIOS,
+    },*/
   ];
 
-  const filteredNavItems = navItems.filter(
-    (item) => userRole && item.allowedRoles.includes(userRole),
+  // 3. Filtrar usando la función auxiliar centralizada (tolera "user", "Usuario", etc.)
+  const filteredNavItems = navItems.filter((item) =>
+    checkPermission(userRole, item.permission)
   );
 
   return (
@@ -110,7 +121,8 @@ export function NavigationPanel({
         })}
       </div>
 
-      {userRole === "user" && !menuColapsado && (
+      {/* 4. Normalizamos la verificación para el mensaje de aviso */}
+      {checkPermission(userRole, ["user", "usuario"]) && !menuColapsado && (
         <div
           className="mt-auto p-4 rounded-lg"
           style={{ backgroundColor: "#FFF9C4" }}

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { LogOut, User } from "lucide-react";
 
@@ -48,6 +49,11 @@ export function MenuBar({
       onNavigate("configuracion");
       setActiveMenu(null);
     }
+    // ANOTACIÓN: Disparador para la vista de usuarios
+    if (menuId === "herramientas" && option === "Usuarios") {
+      onNavigate("usuarios");
+      setActiveMenu(null);
+    }
     if (menuId === "archivo" && option === "Salir") {
       onLogout();
     }
@@ -64,12 +70,11 @@ export function MenuBar({
 
   return (
     <div
-      className="border-b relative z-50"
-      style={{ backgroundColor: "#FFFFFF", borderColor: "#C8E6C9" }}
+      className="border-b relative z-50 bg-white border-green-200"
     >
       <div className="flex items-center px-6 py-3">
         <div className="mr-8">
-          <h1 className="text-xl font-semibold" style={{ color: "#388E3C" }}>
+          <h1 className="text-xl font-semibold text-green-700">
             NexKon
           </h1>
         </div>
@@ -78,8 +83,7 @@ export function MenuBar({
           {menuItems.map((item) => (
             <div key={item.id} className="relative">
               <button
-                className="px-3 py-1 transition-colors rounded hover:bg-gray-50"
-                style={{ color: "#333333" }}
+                className="px-3 py-1 transition-colors rounded hover:bg-gray-50 text-gray-800"
                 onMouseEnter={() => setActiveMenu(item.id)}
                 onMouseLeave={() => setActiveMenu(null)}
               >
@@ -88,8 +92,7 @@ export function MenuBar({
 
               {activeMenu === item.id && (
                 <div
-                  className="absolute top-full left-0 mt-1 py-2 rounded shadow-lg border min-w-[160px]"
-                  style={{ backgroundColor: "#FFFFFF", borderColor: "#C8E6C9" }}
+                  className="absolute top-full left-0 mt-1 py-2 rounded shadow-lg border min-w-[160px] bg-white border-green-200"
                   onMouseEnter={() => setActiveMenu(item.id)}
                   onMouseLeave={() => setActiveMenu(null)}
                 >
@@ -98,30 +101,26 @@ export function MenuBar({
                       <button
                         key={option}
                         onClick={() => handleMenuItemClick(item.id, option)}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors text-sm"
-                        style={{ color: "#333333" }}
+                        className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors text-sm text-gray-800"
                       >
                         {option}
                       </button>
                     ) : (
                       <div key={option.label} className="relative group">
                         <button
-                          className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors text-sm flex justify-between items-center"
-                          style={{ color: "#333333" }}
+                          className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors text-sm flex justify-between items-center text-gray-800"
                         >
                           {option.label}
-                          <span style={{ color: "#888888" }}>▸</span>
+                          <span className="text-gray-400">▸</span>
                         </button>
                         <div
-                          className="absolute left-full top-0 hidden group-hover:block rounded shadow-lg border min-w-[120px] py-1"
-                          style={{ backgroundColor: "#FFFFFF", borderColor: "#C8E6C9" }}
+                          className="absolute left-full top-0 hidden group-hover:block rounded shadow-lg border min-w-[120px] py-1 bg-white border-green-200"
                         >
                           {option.subOptions.map((sub) => (
                             <button
                               key={sub}
                               onClick={() => handleMenuItemClick(item.id, sub)}
-                              className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors text-sm"
-                              style={{ color: "#333333" }}
+                              className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors text-sm text-gray-800"
                             >
                               {sub}
                             </button>
@@ -139,33 +138,21 @@ export function MenuBar({
         {/* User info */}
         <div className="ml-auto flex items-center gap-4">
           <div
-            className="flex items-center gap-2 px-3 py-1 rounded"
-            style={{ backgroundColor: "#E8F5E9" }}
+            className="flex items-center gap-2 px-3 py-1 rounded bg-green-50"
           >
-            <User size={16} style={{ color: "#4CAF50" }} />
-            <span style={{ color: "#333333" }}>{username}</span>
+            <User size={16} className="text-green-600" />
+            <span className="text-gray-800">{username}</span>
             <span
-              className="px-2 py-0.5 rounded text-xs"
-              style={{
-                backgroundColor: userRole === "admin" ? "#388E3C" : "#4CAF50",
-                color: "#FFFFFF",
-              }}
+              className={`px-2 py-0.5 rounded text-xs text-white ${
+                userRole === "admin" ? "bg-green-700" : "bg-green-600"
+              }`}
             >
               {userRole?.toUpperCase()}
             </span>
           </div>
           <button
             onClick={onLogout}
-            className="flex items-center gap-2 px-3 py-1 rounded transition-colors"
-            style={{ color: "#333333" }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#FFEBEE";
-              e.currentTarget.style.color = "#C62828";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.color = "#333333";
-            }}
+            className="flex items-center gap-2 px-3 py-1 rounded text-gray-800 hover:bg-red-50 hover:text-red-700 transition-colors"
           >
             <LogOut size={18} />
             Salir

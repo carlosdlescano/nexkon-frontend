@@ -19,15 +19,17 @@ function useIsMobile() {
 }
 
 export default function App() {
-  const [activeView, setActiveView] = useState("inicioView");//inicio por defecto
+  const [activeView, setActiveView] = useState("inicio");//inicio por defecto
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [username, setUsername] = useState("");
   const [openNuevoProveedor, setOpenNuevoProveedor] = useState(false);
   const isMobile = useIsMobile();
+  const [openNuevoUsuario, setOpenNuevoUsuario] = useState(false);
 
-  const handleLogin = (user, role) => {
-    setUsername(user);
+  const handleLogin = (role, user) => {
+    const nombreDisplay = typeof user === 'object' ? (user.nombre || user.email) : user;
+    setUsername(nombreDisplay);
     setUserRole(role);
     setIsAuthenticated(true);
   };
@@ -46,6 +48,12 @@ export default function App() {
 
   const handleNuevoProveedorClosed = () => {
     setOpenNuevoProveedor(false);
+  };
+
+  // CAMBIO 2: Handlers para manejar la apertura y cierre del modal de creación de usuarios
+  const handleOpenNuevoUsuario = () => {
+    setActiveView("usuarios");
+    setOpenNuevoUsuario(true);
   };
 
   if (!isAuthenticated) {
@@ -89,6 +97,7 @@ export default function App() {
         <div className="flex-1 overflow-auto">
           <ContentArea
             activeView={activeView}
+            userRole={userRole}
             openNuevoProveedor={openNuevoProveedor}
             onNuevoProveedorClosed={handleNuevoProveedorClosed}
           />
@@ -106,7 +115,7 @@ export default function App() {
     );
   }
 
-  /* ── Layout Escritorio (Desktop) ── */
+  /* ── Layout Escritorio ── */
   return (
     <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor: "#F0F8F4" }}>
       {/* Barra superior fija */}
@@ -131,6 +140,7 @@ export default function App() {
         <main className="flex-1 overflow-y-auto">
           <ContentArea
             activeView={activeView}
+            userRole={userRole}
             openNuevoProveedor={openNuevoProveedor}
             onNuevoProveedorClosed={handleNuevoProveedorClosed}
           />

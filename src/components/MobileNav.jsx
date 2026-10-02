@@ -2,9 +2,9 @@ import { Home, ShoppingCart, Package, BarChart3, ShoppingBag, FileText, Menu, X,
 import { useState } from "react";
 
 const ALL_ITEMS = [
-  { id: "inicio",    label: "Inicio",    icon: Home,        adminOnly: false },
+  { id: "inicio",    label: "Inicio",    icon: Home,         adminOnly: false },
   { id: "venta",     label: "Venta",     icon: ShoppingCart, adminOnly: false },
-  { id: "articulos", label: "Artículos", icon: Package,      adminOnly: true  },
+  { id: "articulos", label: "Artículos", icon: Package,      adminOnly: false }, // 👈 Permitido para usuario estándar
   { id: "stock",     label: "Stock",     icon: BarChart3,    adminOnly: true  },
   { id: "compras",   label: "Compras",   icon: ShoppingBag,  adminOnly: true  },
   { id: "reportes",  label: "Reportes",  icon: FileText,     adminOnly: true  },
@@ -13,9 +13,11 @@ const ALL_ITEMS = [
 export function MobileNav({ activeView, onViewChange, userRole, username, onLogout }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const visibleItems = ALL_ITEMS.filter((i) => !i.adminOnly || userRole === "admin");
+  // Normalización de rol
+  const role = userRole?.toString().trim().toLowerCase();
+  const visibleItems = ALL_ITEMS.filter((i) => !i.adminOnly || role === "admin");
 
-  // Muestra hasta 4 elementos en la barra inferior + el disparador "Más"
+  // Muestra hasta 4 elementos en la barra inferior + botón "Más" si hay adicionales
   const bottomItems = visibleItems.slice(0, 4);
   const hasMore = visibleItems.length > 4;
   const extraItems = visibleItems.slice(4);
